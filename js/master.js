@@ -1,117 +1,72 @@
 (function() {
+	var selectedCar, saveButton = document.querySelector('.fa-download').parentNode; 
+	// parentNode is the element's "wrapper" (whatever it's nested in)
+	
+	if (window.localStorage.getItem('savedCar')) {
+		var data = window.localStorage.getItem('savedCar', selectedCar);
 
+		data = JSON.parse(data);
+		renderCarInfo(data);
+	}
 
-console.log("SEAF working");
+	// expanded AJAX example
+	$('.thumbInfo img').on('click', function() {
 
+		// do an AJAX call
+		$.ajax({
+			url: "includes/ajaxQuery.php",
+			data: { model: this.id },
+			type: "GET"
+		}) //  don't put a semicolon here so we can chain methods together
 
-var images = [document.querySelector('#F55'), document.querySelector('#F56'), document.querySelector('#R58')],
-carname = document.querySelector('.modelName'),
-price = document.querySelector('.priceInfo'),
-details = document.querySelector('.modelDetails'),
-httpRequest;
+		.done(function(data) {
+			console.log(data);
 
-//I added these functions for the purpose of having a default option load immediately. It makes the site look less... unfinished. Pardon my clutter.
+			if (data && data !== "null") {
+				selectedCar = data;
 
-function loaddefault(){
+				data = JSON.parse(data);
+				renderCarInfo(data);
+			} else {
+				alert('your ajax call didn\'t work');
+			}			
+		}) // don't put a semicolon here either!
 
-requestdefault();
-populatedefaults();
-
-}
-
-function requestdefault(){
-
-httpRequest = new XMLHttpRequest();
-
-if(!httpRequest){
-
-console.log("Your browser cannot handle AJAX. Get a better browser you scrub.");
-return false;
-
-}
-
-httpRequest.onreadystatechange = populatedefaults;
-httpRequest.open('GET', 'includes/ajaxQuery.php' + '?model=' + "F55");
-httpRequest.send();
-
-}
-
-function populatedefaults(){
-
-if(httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200){
-
-var carInfo = JSON.parse(httpRequest.responseText);
-carname.firstChild.nodeValue = carInfo.modelName;
-price.firstChild.nodeValue = carInfo.pricing;
-details.firstChild.nodeValue = carInfo.modelDetails;
-
-
-}
-
-}
-
-//Here is the main function that dynamically populates the container on click.
-
-function request(){
-
-httpRequest = new XMLHttpRequest();
-
-if(!httpRequest){
-
-console.log("Your browser cannot handle AJAX. Get a better browser you scrub.");
-return false;
-
-}
-
-httpRequest.onreadystatechange = updatecarinfo;
-httpRequest.open('GET', 'includes/ajaxQuery.php' + '?model=' + this.id);
-httpRequest.send();
-
-}
-
-function updatecarinfo(){
-
-if(httpRequest.readyState === XMLHttpRequest.DONE && httpRequest.status === 200){
-
-var carInfo = JSON.parse(httpRequest.responseText);
-carname.firstChild.nodeValue = carInfo.modelName;
-price.firstChild.nodeValue = carInfo.pricing;
-details.firstChild.nodeValue = carInfo.modelDetails;
-
-//console.log("update working");
-
-}
-
-}
-
-window.addEventListener('load', loaddefault, false);
-
-[].forEach.call(images, function(img) {
-	//console.log("listener working");
-	img.addEventListener('click', request, false);
-});
-
-
-
-})();
-
-//I attempted to use the jQuery version. However, the browser is struggling to parse the jQuery file. I am not sure if the problem is with my code, or jQuery itself.
-
-
-/*(function() {
-
-	$('#cars img').on('click', function() {
-
-		$.getJSON('includes/ajaxQuery.php', { model : this.id }, function(carInfo){
-
-			$('.modelName').text(carInfo.modelName);
-
-			$('.priceInfo').text(carInfo.pricing);
-
-			$('.modelDetails').text(carInfo.modelDetails);
-			
-		});
+		.fail(function(ajaxCall, status, error) {
+			console.log(status, ", ", error);
+			console.dir(ajaxCall); // outputs the ajax call as an object
+		}); // terminate the ajax function
 
 	});
+
+	function renderCarInfo(car) {
+		$('.thumbInfo img').addClass('nonActive'); // for collections, use jQuery (more than one element)
+		$('#' + car.model).removeClass('nonActive');
+
+		$('.subhead span').text(" mini Cooper " + car.model);
+		$('.modelName').text(car.modelName);
+		$('.priceInfo').text(car.pricing);
+		$('.modelDetails').text(car.modelDetails);
+	}
+
+	function saveData() {
+		if (window.localStorage) {
+			window.localStorage.setItem('savedCar', selectedCar);
+		}
+	}
 	
-})();*/
+	saveButton.addEventListener('click', saveData, false);
+
+	$(window).load(function() {
+		//set up our roundabout container
+		$('#cars').roundabout({
+			childSelector : 'img',
+			minOpacity: 0.8,
+			minScale: 0.74,
+			duration: 1200
+		});
+	});
+
+	$('#cars').css('opacity', 1);
+
+})();

@@ -45,7 +45,6 @@
       <div class="small-6 columns">
         <h4 class="subhead">SELECT YOUR MODEL :<span>&nbsp;</span></h4>
         <div class="thumbInfo">
-          <!-- ===== USE THESE ELEMENTS (hint - an attribute is key) TO QUERY THE DB === -->
           <img src="images/F55.jpg" alt="blue mini" id="F55" data-roundaboutindex="0">
           <img src="images/F56.jpg" alt="yellow mini" id="F56" data-roundaboutindex="1">
           <img src="images/R57.jpg" alt="convertible mini" id="R58" data-roundaboutindex="2">
@@ -65,8 +64,6 @@
       </div>
       
       <!-- model info block  -->
-
-      <!-- ==== POPULATE THESE ELEMENTS WITH THE QUERY RESULT === -->
       <div class="small-6 columns modelInfo">         
           <h4 class="modelName">Model Name Here</h4>
           <p class="priceInfo">Pricing here</p>
@@ -81,6 +78,7 @@
         <div id="map-canvas"></div>
         <i class="fa fa-expand left">&nbsp;Click to expand map</i>
       </div>
+      
       <div class="small-6 columns">
         <div>
           <h4>Find a dealer close to you!</h4>
@@ -109,12 +107,13 @@
         footer info here
       </footer>      
     </div>
-    <script src="js/vendor/jquery.js"></script>  
+    <script src="js/vendor/jquery.js"></script>    
     <script src="js/foundation.min.js"></script>
     <script>
       $(document).foundation();
     </script>
     
+    <script src="js/jquery.roundabout.min.js"></script>
     <script src="js/master.js"></script>
   </body>
 </html>

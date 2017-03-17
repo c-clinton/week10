@@ -129,7 +129,7 @@ li > p { margin-bottom: 5px; font-family: arial, helvetica, sans-serif; }
 
 /* you may have to write more here - these are my simple fades, etc */
 
-.nonActive { opacity: 0.4; }
+.nonActive { opacity: .2; }
 
 .fadeOut { opacity:0; }
 
