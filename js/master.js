@@ -2,12 +2,16 @@
 	var selectedCar, saveButton = document.querySelector('.fa-download').parentNode; 
 	// parentNode is the element's "wrapper" (whatever it's nested in)
 	
+
+	function loadStuff(){
 	if (window.localStorage.getItem('savedCar')) {
 		var data = window.localStorage.getItem('savedCar', selectedCar);
 
 		data = JSON.parse(data);
 		renderCarInfo(data);
 	}
+	}
+	
 
 	// expanded AJAX example
 	$('.thumbInfo img').on('click', function() {
@@ -40,8 +44,13 @@
 	});
 
 	function renderCarInfo(car) {
+		var currentThumb = $('#' + car.model);
 		$('.thumbInfo img').addClass('nonActive'); // for collections, use jQuery (more than one element)
 		$('#' + car.model).removeClass('nonActive');
+
+		//animate roundabout to where selected car is
+		var animIndex = parseInt(currentThumb.data('roundaboutindex'), 8);
+		$('#cars').roundabout('animateToChild', animIndex);
 
 		$('.subhead span').text(" mini Cooper " + car.model);
 		$('.modelName').text(car.modelName);
@@ -68,5 +77,7 @@
 	});
 
 	$('#cars').css('opacity', 1);
+
+		window.addEventListener('load', loadStuff, false);
 
 })();
